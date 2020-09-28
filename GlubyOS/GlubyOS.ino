@@ -3,15 +3,32 @@
 #include <HTTPClient.h>
 #include <Ticker.h>
 #include <WiFi.h>
-#include <GxEPD.h>
-#include "SPI.h"
 
 // Device definitions
-#define ATOM 2
+#define DISK 1
+#define CUBE 2
 #define CARD 3
 
 // Select active device to build for
 #define DEVICE CARD
+
+#if DEVICE == DISK
+
+#elif DEVICE == CUBE
+  uint8_t DisBuff[2 + 5 * 5 * 3];
+#elif DEVICE == CARD
+  #include <GxEPD.h>
+  #include "SPI.h"
+  #include <GxGDEH0213B73/GxGDEH0213B73.h>  // 2.13" b/w newer panel
+  #include <Fonts/FreeSansBold9pt7b.h>
+  #include <Fonts/FreeSansBold12pt7b.h>
+  #include <Fonts/FreeSansBold18pt7b.h>
+  #include <Fonts/FreeSansBold24pt7b.h>
+  #include <GxIO/GxIO_SPI/GxIO_SPI.h>
+  #include <GxIO/GxIO.h>
+#endif
+
+
 
 enum statesEnum { OFF, BOOT, CONNECTED, ACCESSPOINT, READ, SLEEP, FAILURE };
 
@@ -22,60 +39,54 @@ bool tickState;
 bool alarm_on = false;
 
 time_t lastAlarm = time(nullptr);
-
-const char* host = "nightscoutsanne.herokuapp.com";
-const int httpsPort = 443;
-
 time_t now = time(nullptr);
 
 WiFiClientSecure client;
 
 void setup()
 {
-//  pinMode(33, OUTPUT);
-//  delay(10);
-//  Serial.begin(115200);
-//  
-//  setupDisplay();
-//  
-//  showState("BOOTING");
-//
-//  wifiAPSetup();
-//   
-//  showState("CONNECTING");
-//  connectNightscout();
-//  showState("CONNECTED");
-//  //lastAlarm = now;
-//  refresh();
-//  ticker.attach(118, refresh);
+  delay(10);
+  showState(OFF);
+  
+  Serial.begin(115200);
+  initDevice();
+  
+  delay(10);
+
+  wifiAPSetup();
+
+  connectNightscout();
+
+  refresh();
+  ticker.attach(118, refresh);
 }
 
 void refresh(){
  
-//  showState("READING");
-//
-//  now = checkTime();
+  showState(READ);
+
+  now = checkTime();
+  
+  String line = checkNightscout();
+
+  if(line.length() > 0){
+    Serial.println("Start parsing");
+    
+    float mmol = getMMOL(line);
+    String arrow = getArrow(line);
+    int timeSince = getTimeDiff(line);
+  
+    Serial.println("==========");
+
+    showCurrentBG(mmol);
+
+//    setMmolToMatrix(mmol, arrow);
 //  
-//  String line = checkNightscout();
-//
-//  if(line.length() > 0){
-//    Serial.println("Start parsing");
-//    
-//    float mmol = getMMOL(line);
-//    String arrow = getArrow(line);
-//    int timeSince = getTimeDiff(line);
-//  
-//    Serial.println("==========");
-//
-//    displayMmol(mmol);
-//
-////    setMmolToMatrix(mmol, arrow);
-////  
-////    setTimeSinceToMatrix(timeSince);
+//    setTimeSinceToMatrix(timeSince);
 //    showState("ONLINE");
-//    } else {
+    } else {
 //    showState("ERROR");
-//  }
+  }
 }
 
 void loop()

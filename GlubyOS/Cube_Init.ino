@@ -1,6 +1,5 @@
-#if DEVICE == CARD
+#if DEVICE == CUBE
   void initDevice(){
-    setupDisplay();
     
     showState(BOOT);
   }
