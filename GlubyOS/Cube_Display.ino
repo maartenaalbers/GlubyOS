@@ -9,20 +9,24 @@
     }else if(state == CONNECTED){
       box("green");
     } else if( state == ACCESSPOINT){
-      box("yellow");
+      fill("yellow");
     } else if(state == READ){
       box("blue");
     } else if(state == SLEEP){
-      fourDots("off");
+      fourDots("orange");
     } else if(state == FAILURE){
       cross("red");
     } else if(state == WARNING){
       box("orange");
+    }else if(state == CALIBRATE){
+      fill("orange");
     }
   }
   
   void showCurrentBG(float bg, String arrow) {
-    if(bg < urgentLow) {
+    if(bg < errorLow) {
+      showState(CALIBRATE);
+    }else if(bg < urgentLow) {
       setArrowWithColor(arrow, "red");
     }else if(bg < warningLow) {
       setArrowWithColor(arrow, "orange");

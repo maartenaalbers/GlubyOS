@@ -29,6 +29,7 @@
   #include <GxIO/GxIO.h>
 #endif
 
+float errorLow = 0.5;
 float urgentLow = 3.5;
 float warningLow = 4.0;
 float warningHigh = 10.0;
@@ -40,13 +41,10 @@ float alarmHigh = 13.5;
 int staleDataWarning = 900;
 int staleDataError = 1800;
 
-enum statesEnum { OFF, BOOT, CONNECTED, ACCESSPOINT, READ, SLEEP, FAILURE, WARNING };
+enum statesEnum { OFF, BOOT, CONNECTED, ACCESSPOINT, READ, SLEEP, CALIBRATE, FAILURE, WARNING };
 
 Ticker ticker;
 Ticker tickerAlarm;
-
-bool tickState;
-bool alarm_on = false;
 
 time_t lastAlarm = time(nullptr);
 time_t now = time(nullptr);
@@ -81,12 +79,13 @@ void refresh(){
   if(line.length() > 0){
     Serial.println("Start parsing");
     
-    float mmol = getMMOL(line);
+    float bg = getMMOL(line);
     String arrow = getArrow(line);
     int timeSince = getTimeDiff(line);
  
-    showCurrentBG(mmol, arrow);
+    showCurrentBG(bg, arrow);
     showTimeSince(timeSince);
+    alarmForBG(bg);
 
   } else {
     showState(FAILURE);
@@ -95,5 +94,6 @@ void refresh(){
 
 void loop()
 {
-
+  nextLoop();
+  delay(50);
 }
