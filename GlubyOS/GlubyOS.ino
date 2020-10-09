@@ -40,7 +40,7 @@ float alarmHigh = 13.5;
 int staleDataWarning = 900;
 int staleDataError = 1800;
 
-enum statesEnum { OFF, BOOT, CONNECTED, ACCESSPOINT, READ, SLEEP, FAILURE };
+enum statesEnum { OFF, BOOT, CONNECTED, ACCESSPOINT, READ, SLEEP, FAILURE, WARNING };
 
 Ticker ticker;
 Ticker tickerAlarm;
@@ -55,13 +55,12 @@ WiFiClientSecure client;
 
 void setup()
 {
+  Serial.begin(115200);
   delay(10);
+  
   showState(OFF);
   
-  Serial.begin(115200);
   initDevice();
-  
-  delay(10);
 
   wifiAPSetup();
 
@@ -85,17 +84,12 @@ void refresh(){
     float mmol = getMMOL(line);
     String arrow = getArrow(line);
     int timeSince = getTimeDiff(line);
-  
-    Serial.println("==========");
-
+ 
     showCurrentBG(mmol, arrow);
+    showTimeSince(timeSince);
 
-//    setMmolToMatrix(mmol, arrow);
-//  
-//    setTimeSinceToMatrix(timeSince);
-//    showState("ONLINE");
-    } else {
-//    showState("ERROR");
+  } else {
+    showState(FAILURE);
   }
 }
 

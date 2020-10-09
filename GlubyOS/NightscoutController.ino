@@ -1,5 +1,3 @@
-
-
 const char* root_ca= \
 "-----BEGIN CERTIFICATE-----\n" \
 "MIICiTCCAg+gAwIBAgIQH0evqmIAcFBUTAGem2OZKjAKBggqhkjOPQQDAzCBhTEL\n" \
@@ -22,7 +20,6 @@ void connectNightscout() {
   configTime(10800, 0, "pool.ntp.org", "time.nist.gov");
 
   now = checkTime();
-  // Use WiFiClientSecure class to create TLS connection
 }
 
 String checkNightscout(){
@@ -106,12 +103,4 @@ String getValue(String data, char separator, int index)
         }
     }
     return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
-}
-
-void setTimeSinceToMatrix(int timeSince){
-  if(timeSince > staleDataError){
-    showState(FAILURE);
-  }else if(timeSince > staleDataWarning){
-//    showState("WARNING");
-  }
 }

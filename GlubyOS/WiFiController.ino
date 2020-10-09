@@ -20,7 +20,7 @@ void wifiAPSetup() {
   if(!res) {
     showState(FAILURE);
     logDebug("Failed to connect");
-    // ESP.restart();
+    ESP.restart();
   } 
   else {
     logDebug("connected...yeey :)");
