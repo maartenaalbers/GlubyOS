@@ -1,13 +1,4 @@
-float urgentLow = 3.5;
-float warningLow = 4.0;
-float warningHigh = 10.0;
-float urgentHigh = 12.0;
 
-float alarmLow = 3.5;
-float alarmHigh = 13.5;
-
-int staleDataWarning = 900;
-int staleDataError = 1800;
 
 const char* root_ca= \
 "-----BEGIN CERTIFICATE-----\n" \
@@ -115,44 +106,6 @@ String getValue(String data, char separator, int index)
         }
     }
     return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
-}
-
-void setMmolToMatrix(float mmol, String arrow){
-  if(mmol < urgentLow) {
-//    setArrowWithColor(arrow, "red");
-  }else if(mmol < warningLow) {
-//     setArrowWithColor(arrow, "orange");
-  } else if(mmol < warningHigh) {
-//     setArrowWithColor(arrow, "green");
-  } else if(mmol < urgentHigh) {
-//    setArrowWithColor(arrow, "yellow");
-  } else {
-//    setArrowWithColor(arrow, "purple");
-  }
-}
-
-void setArrowWithColor(String character, String color){
-  Serial.print("setArrowWithColor : ");
-  Serial.print(character);
-  Serial.print(" - ");
-  Serial.println(color);
-  Serial.println("==========");
-  
-//  if( character.indexOf("TripleDown") > 0){
-//    tripleArrowDown(color);
-//  } else if( character.indexOf("DoubleDown") > 0){
-//    doubleArrowDown(color);
-//  } else if( character.indexOf("SingleDown") > 0){
-//    singleArrowDown(color);
-//  } else if( character.indexOf("SingleUp") > 0){
-//    singleArrowUp(color);
-//  } else if( character.indexOf("DoubleUp") > 0){
-//    doubleArrowUp(color);
-//  } else if( character.indexOf("TripleDown") > 0){
-//    tripleArrowUp(color);
-//  } else {
-//    flatLine(color);
-//  }
 }
 
 void setTimeSinceToMatrix(int timeSince){

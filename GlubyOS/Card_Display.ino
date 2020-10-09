@@ -34,7 +34,7 @@
     updateScreen();
   }
  
- void showCurrentBG(float bg) {
+ void showCurrentBG(float bg, String arrow) {
   value = String(bg);
   updateScreen();
   }

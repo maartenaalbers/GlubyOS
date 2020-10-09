@@ -10,11 +10,12 @@
 #define CARD 3
 
 // Select active device to build for
-#define DEVICE CARD
+#define DEVICE CUBE
 
 #if DEVICE == DISK
 
 #elif DEVICE == CUBE
+  #include "M5Atom.h"
   uint8_t DisBuff[2 + 5 * 5 * 3];
 #elif DEVICE == CARD
   #include <GxEPD.h>
@@ -28,7 +29,16 @@
   #include <GxIO/GxIO.h>
 #endif
 
+float urgentLow = 3.5;
+float warningLow = 4.0;
+float warningHigh = 10.0;
+float urgentHigh = 12.0;
 
+float alarmLow = 3.5;
+float alarmHigh = 13.5;
+
+int staleDataWarning = 900;
+int staleDataError = 1800;
 
 enum statesEnum { OFF, BOOT, CONNECTED, ACCESSPOINT, READ, SLEEP, FAILURE };
 
@@ -78,7 +88,7 @@ void refresh(){
   
     Serial.println("==========");
 
-    showCurrentBG(mmol);
+    showCurrentBG(mmol, arrow);
 
 //    setMmolToMatrix(mmol, arrow);
 //  
